@@ -1,38 +1,97 @@
 import styles from './Post.module.css'
 import { Avatar } from './Avatar'
 import { Comment } from './Comment'
+import { format, formatDistanceToNow } from 'date-fns'
 
-export function Post () {
+export interface IPostProps {
+  id: string
+  avatarSrc: string
+  date: Date
+  name: string
+  role: string
+  comments: {
+    type: 'paragraph' | 'link' | 'hashtag' | 'blankline'
+    content: string | string[]
+    link?: string
+  }[]
+}
+
+export function Post (props: IPostProps) {
+  const {
+    avatarSrc,
+    comments,
+    date,
+    name,
+    role,
+  } = props
+
+  const publishedDate = format(date, "LLLL d 'at' HH:mm'h'")
+  const publishedDateToNow = formatDistanceToNow(date, {
+    addSuffix: true,
+  })
+
+  let contentElement: JSX.Element[] = []
+
+  contentElement = comments.map(comment => {
+    switch (comment.type) {
+      case 'paragraph':
+        return <p>{comment.content}</p>
+
+      case 'link':
+        return (
+          <a
+            href={comment.link}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {comment.content}
+          </a>
+        )
+
+      case 'hashtag':
+        return (
+          <p>{(comment.content as string[]).map((h: string) => (
+            <a
+              key={h}
+              className={styles.hashtag}
+              target="_blank"
+              rel="noreferrer"
+              href={`https://twitter.com/search?q=%23${h}`}
+            >
+              {`#${h} `}
+            </a>
+          ))}</p>
+        )
+
+      default:
+        return <br />
+    }
+  })
+
   return (
     <article className={styles.post}>
 
       <header>
         <div className={styles.author}>
           <Avatar
-            src="https://avatars.githubusercontent.com/Torres-ssf"
+            src={avatarSrc}
           />
           <div className={styles.authorInfo}>
-            <strong>Jane Cooper</strong>
-            <span>Dev Front-end</span>
+            <strong>{name}</strong>
+            <span>{role}</span>
           </div>
         </div>
 
-        <time title="May 11 at 08:34h" dateTime="2022-05-11 08:34:23">Published one hour ago</time>
+        <time
+          title={publishedDate}
+          dateTime={date.toISOString()}
+        >
+          {publishedDateToNow}
+        </time>
       </header>
 
       <div className={styles.content}>
-
-        <p>Fala galeraa 👋</p>
-
-        <p>Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀</p>
-
-        <p><a href="#">👉 &nbsp; jane.design/doctorcare</a></p>
-
-        <p>
-          <a href="#">#novoprojeto</a>&nbsp;
-          <a href="#">#nlw</a>&nbsp;
-          <a href="#">#rocketseat</a>&nbsp;
-        </p>
+        {contentElement}
       </div>
 
       <form className={styles.commentForm}>
