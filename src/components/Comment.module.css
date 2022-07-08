@@ -52,6 +52,18 @@
 .commentContent p {
   margin-top: 1rem;
   color: var(--gray-300);
+  font-size: 0.875rem;
+}
+
+.commentContent p a {
+  font-weight: bold;
+  color: var(--green-500);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.commentContent p a:hover {
+  color: var(--green-300);
 }
 
 .commentBox footer {
