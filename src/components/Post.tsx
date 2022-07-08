@@ -1,71 +1,48 @@
 import styles from './Post.module.css'
 import { Avatar } from './Avatar'
-import { Comment } from './Comment'
 import { format, formatDistanceToNow } from 'date-fns'
+import { FormEvent, useState } from 'react'
+import { ICommentProps } from './Comment'
+import { PostContent } from './PostContent'
+
+export interface IPostContent {
+  text: string
+  links: string[]
+  hashtags: string[]
+}
+
+export interface IAuthor {
+  name: string
+  avatar: string
+  role: string
+}
 
 export interface IPostProps {
   id: string
-  avatarSrc: string
-  date: Date
-  name: string
-  role: string
-  comments: {
-    type: 'paragraph' | 'link' | 'hashtag' | 'blankline'
-    content: string | string[]
-    link?: string
-  }[]
+  author: IAuthor
+  publishedAt: Date
+  content: IPostContent
+  comments: ICommentProps[]
 }
 
 export function Post (props: IPostProps) {
+  const [commentText, setCommentText] = useState('')
+
+  function handleCommentSubmit (event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    setCommentText('')
+  }
+
   const {
-    avatarSrc,
-    comments,
-    date,
-    name,
-    role,
+    author,
+    publishedAt: postedAt,
+    content,
   } = props
 
-  const publishedDate = format(date, "LLLL d 'at' HH:mm'h'")
-  const publishedDateToNow = formatDistanceToNow(date, {
+  const postedDate = format(postedAt, "LLLL d 'at' HH:mm'h'")
+  const postedDateToNow = formatDistanceToNow(postedAt, {
     addSuffix: true,
-  })
-
-  let contentElement: JSX.Element[] = []
-
-  contentElement = comments.map(comment => {
-    switch (comment.type) {
-      case 'paragraph':
-        return <p>{comment.content}</p>
-
-      case 'link':
-        return (
-          <a
-            href={comment.link}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {comment.content}
-          </a>
-        )
-
-      case 'hashtag':
-        return (
-          <p>{(comment.content as string[]).map((h: string) => (
-            <a
-              key={h}
-              className={styles.hashtag}
-              target="_blank"
-              rel="noreferrer"
-              href={`https://twitter.com/search?q=%23${h}`}
-            >
-              {`#${h} `}
-            </a>
-          ))}</p>
-        )
-
-      default:
-        return <br />
-    }
   })
 
   return (
@@ -74,42 +51,41 @@ export function Post (props: IPostProps) {
       <header>
         <div className={styles.author}>
           <Avatar
-            src={avatarSrc}
+            src={author.avatar}
           />
           <div className={styles.authorInfo}>
-            <strong>{name}</strong>
-            <span>{role}</span>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
           </div>
         </div>
 
         <time
-          title={publishedDate}
-          dateTime={date.toISOString()}
+          title={postedDate}
+          dateTime={postedAt.toISOString()}
         >
-          {publishedDateToNow}
+          {postedDateToNow}
         </time>
       </header>
 
       <div className={styles.content}>
-        {contentElement}
+        <PostContent content={content} />
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCommentSubmit} className={styles.commentForm}>
         <strong>Leave your feedback</strong>
 
         <textarea
           placeholder="Leave a comment"
+          value={commentText}
+          onChange={e => setCommentText(e.target.value)}
         />
 
         <button type="submit">Add comment</button>
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        <p>comments</p>
       </div>
     </article>
-
   )
 }

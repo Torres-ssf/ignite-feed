@@ -41,26 +41,8 @@
   line-height: 1.6;
 }
 
-
-.content {
-  line-height: 1.6;
-  color: var(--gray-300);
-  margin-top: 1.5rem;
-}
-
 .content p {
   margin-top: 1rem;
-}
-
-.content a {
-  font-weight: bold;
-  color: var(--green-500);
-  text-decoration: none;
-  transition: color .2s;
-}
-
-.content a:hover {
-  color: var(--green-300);
 }
 
 .commentForm {
@@ -78,6 +60,7 @@
 .commentForm textarea {
   width: 100%;
   background: var(--gray-900);
+  color: var(--white);
   border: 0;
   resize: none;
   height: 6rem;
