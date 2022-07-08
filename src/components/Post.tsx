@@ -1,8 +1,8 @@
 import styles from './Post.module.css'
 import { Avatar } from './Avatar'
+import { Comment, ICommentProps } from './Comment'
 import { format, formatDistanceToNow } from 'date-fns'
 import { FormEvent, useState } from 'react'
-import { ICommentProps } from './Comment'
 import { PostContent } from './PostContent'
 
 export interface IPostContent {
@@ -84,7 +84,12 @@ export function Post (props: IPostProps) {
       </form>
 
       <div className={styles.commentList}>
-        <p>comments</p>
+        {props.comments.map(comment => (
+          <Comment
+            key={comment.id}
+            {...comment}
+          />
+        ))}
       </div>
     </article>
   )
