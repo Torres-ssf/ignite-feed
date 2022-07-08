@@ -1,0 +1,17 @@
+.content {
+  line-height: 1.6;
+  color: var(--gray-300);
+  margin-top: 1.5rem;
+  white-space: pre-line;
+}
+
+.content a {
+  font-weight: bold;
+  color: var(--green-500);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.content a:hover {
+  color: var(--green-300);
+}
