@@ -1,3 +1,4 @@
+import { matchLinkOrHashtagRegex, splitLinkOrHashtagRegex, testLinkProtocolRegex } from '../utils/regex'
 import { IPostContent } from './Post'
 
 import styles from './PostContent.module.css'
@@ -18,26 +19,28 @@ export function PostContent (props: IPostContentProps) {
   let contentElement: JSX.Element
 
   if (links.length || hashtags.length) {
-    let contentText = text.replace(/\{\{link-[0-9]*\}\}/g, (match) => {
-      const linkIndex = match.split(/-|\}\}/)[1]
+    const contentText = text.replace(matchLinkOrHashtagRegex, (match) => {
+      const [, type, itemIndex] = match.split(splitLinkOrHashtagRegex)
 
-      const link = links[Number(linkIndex)]
+      if (type === 'link' && links[Number(itemIndex)]) {
+        const link = links[Number(itemIndex)]
 
-      let hyperlink = link
+        let hyperlink = link
 
-      if (!link.match('^https?://')) {
-        hyperlink = 'http://' + hyperlink
+        if (!testLinkProtocolRegex.test(link)) {
+          hyperlink = 'http://' + hyperlink
+        }
+
+        return `<a href="${hyperlink}" target="_blank" rel="noreferrer">${link}</a>`
       }
 
-      return `<a href="${hyperlink}" target="_blank" rel="noreferrer">${link}</a>`
-    })
+      if (type === 'hashtag' && hashtags[Number(itemIndex)]) {
+        const hashtag = hashtags[Number(itemIndex)]
 
-    contentText = contentText.replace(/\{\{hashtag-[0-9]*\}\}/g, (match) => {
-      const hashtagIndex = match.split(/-|\}\}/)[1]
+        return `<a key={h} className={styles.hashtag} target="_blank" rel="noreferrer" href="https://twitter.com/search?q=%23${hashtag}">#${hashtag}</a>`
+      }
 
-      const hashtag = hashtags[Number(hashtagIndex)]
-
-      return `<a key={h} className={styles.hashtag} target="_blank" rel="noreferrer" href="https://twitter.com/search?q=%23${hashtag}">#${hashtag}</a>`
+      return match
     })
 
     contentElement = <p className={styles.content} dangerouslySetInnerHTML={{ __html: contentText }} />
