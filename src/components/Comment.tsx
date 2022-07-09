@@ -6,6 +6,7 @@ import {
   ThumbsUp,
   Trash,
 } from 'phosphor-react'
+import { useState } from 'react'
 
 import { Avatar } from './Avatar'
 import styles from './Comment.module.css'
@@ -17,9 +18,14 @@ export interface ICommentProps extends IComment {
 }
 
 export function Comment (props: ICommentProps) {
+  const [likes, setLikes] = useState(props.likes)
+
+  function handleLikeClick () {
+    setLikes(likes + 1)
+  }
+
   const {
     id,
-    likes,
     author,
     content,
     publishedAt,
@@ -60,7 +66,12 @@ export function Comment (props: ICommentProps) {
       </div>
 
       <footer>
-        <button title="Like comment">
+        <button
+          type="button"
+          className={`${styles.likeButton} ${likes > 0 ? styles.likeButtonPressed : ''}`}
+          title="Like comment"
+          onClick={handleLikeClick}
+        >
           <ThumbsUp size={20} />
           Like <span>{likes}</span>
         </button>

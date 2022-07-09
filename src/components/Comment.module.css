@@ -70,7 +70,16 @@
   margin-top: 1rem;
 }
 
-.commentBox footer button {
+.commentBox footer button svg {
+  margin-right: 0.5rem;
+}
+
+.commentBox footer button span::before {
+  padding: 0 0.25rem;
+  content: "\2022";
+}
+
+.likeButton {
   background: transparent;
   border: 0;
   color: var(--gray-400);
@@ -81,15 +90,14 @@
   border-radius: 2px;
 }
 
-.commentBox footer button:hover {
+.likeButton:hover {
   color: var(--gray-300);
 }
 
-.commentBox footer button svg {
-  margin-right: 0.5rem;
+.likeButtonPressed {
+  color: var(--green-500);
 }
 
-.commentBox footer button span::before {
-  padding: 0 0.25rem;
-  content: "\2022";
+.likeButtonPressed:hover {
+  color: var(--green-300);
 }
