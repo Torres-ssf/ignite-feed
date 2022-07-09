@@ -1,3 +1,4 @@
+import { IPostContent } from '../../components/Post'
 import {
   filterHashtagsRegex,
   filterHtmlRegex,
@@ -6,15 +7,13 @@ import {
   trimRegex,
 } from '../regex'
 
-export function formatTextContent (textToFormat: string) {
+export function formatInputedComment (textToFormat: string): IPostContent {
   const links: string[] = []
   const hashtags: string[] = []
 
-  let text = textToFormat.replace(filterHtmlRegex, '') // remove HTML tags
+  let text = textToFormat.replace(filterHtmlRegex, '')
 
   text = text.replace(filterMultipleEmptyLines, '\n\n')
-
-  text = text.replace(trimRegex, '')
 
   let linksCount = 0
   let hashtagsCount = 0
@@ -36,4 +35,8 @@ export function formatTextContent (textToFormat: string) {
     links,
     hashtags,
   }
+}
+
+export function trimText (text: string): string {
+  return text.replace(trimRegex, '')
 }

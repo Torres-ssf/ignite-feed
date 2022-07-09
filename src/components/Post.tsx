@@ -8,7 +8,10 @@ import {
 } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
-import { formatTextContent } from '../utils/helpers'
+import {
+  formatInputedComment,
+  trimText,
+} from '../utils/helpers'
 import { Avatar } from './Avatar'
 import {
   Comment,
@@ -52,19 +55,23 @@ export function Post (props: IPostProps) {
   function handleCommentSubmit (event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const content = formatTextContent(commentText)
+    const trimmedText = trimText(commentText)
 
-    const comment: ICommentProps = {
-      id: uuidv4(),
-      author,
-      content,
-      likes: 0,
-      publishedAt: new Date(),
+    if (trimmedText) {
+      const content = formatInputedComment(trimmedText)
+
+      const comment: ICommentProps = {
+        id: uuidv4(),
+        author,
+        content,
+        likes: 0,
+        publishedAt: new Date(),
+      }
+
+      setComments([...comments, comment])
+
+      setCommentText('')
     }
-
-    setComments([...comments, comment])
-
-    setCommentText('')
   }
 
   const {
