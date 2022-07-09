@@ -6,16 +6,10 @@ import {
 import { Avatar } from './Avatar'
 
 import styles from './Comment.module.css'
-import { IAuthor, IPostContent } from './Post'
+import { IComment } from './Post'
 import { PostContent } from './PostContent'
 
-export interface ICommentProps {
-  id: string
-  content: IPostContent
-  likes: number
-  author: IAuthor
-  publishedAt: Date
-}
+export interface ICommentProps extends IComment {}
 
 export function Comment (props: ICommentProps) {
   const {
