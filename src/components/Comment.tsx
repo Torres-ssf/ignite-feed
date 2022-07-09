@@ -1,22 +1,29 @@
-import { format, formatDistanceToNow } from 'date-fns'
+import {
+  format,
+  formatDistanceToNow,
+} from 'date-fns'
 import {
   ThumbsUp,
   Trash,
 } from 'phosphor-react'
-import { Avatar } from './Avatar'
 
+import { Avatar } from './Avatar'
 import styles from './Comment.module.css'
 import { IComment } from './Post'
 import { PostContent } from './PostContent'
 
-export interface ICommentProps extends IComment {}
+export interface ICommentProps extends IComment {
+  commentDeleteHandler: (commentId: string) => void
+}
 
 export function Comment (props: ICommentProps) {
   const {
-    author,
+    id,
     likes,
+    author,
     content,
     publishedAt,
+    commentDeleteHandler,
   } = props
 
   const commentDate = format(publishedAt, "LLLL d 'at' HH:mm'h'")
@@ -44,7 +51,7 @@ export function Comment (props: ICommentProps) {
             </time>
           </div>
 
-          <button title="Delete comment">
+          <button type="button" title="Delete comment" onClick={() => commentDeleteHandler(id)}>
             <Trash size={20} />
           </button>
         </header>

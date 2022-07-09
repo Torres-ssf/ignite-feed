@@ -13,10 +13,7 @@ import {
   trimText,
 } from '../utils/helpers'
 import { Avatar } from './Avatar'
-import {
-  Comment,
-  ICommentProps,
-} from './Comment'
+import { Comment } from './Comment'
 import styles from './Post.module.css'
 import { PostContent } from './PostContent'
 
@@ -60,7 +57,7 @@ export function Post (props: IPostProps) {
     if (trimmedText) {
       const content = formatInputedComment(trimmedText)
 
-      const comment: ICommentProps = {
+      const comment: IComment = {
         id: uuidv4(),
         author,
         content,
@@ -72,6 +69,10 @@ export function Post (props: IPostProps) {
 
       setCommentText('')
     }
+  }
+
+  function handleCommentDelete (commentId: string) {
+    setComments(comments.filter(comment => comment.id !== commentId))
   }
 
   const {
@@ -127,8 +128,9 @@ export function Post (props: IPostProps) {
       <div className={styles.commentList}>
         {comments.map(comment => (
           <Comment
-            key={comment.id}
             {...comment}
+            key={comment.id}
+            commentDeleteHandler={handleCommentDelete}
           />
         ))}
       </div>
