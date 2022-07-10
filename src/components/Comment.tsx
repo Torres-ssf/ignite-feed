@@ -14,23 +14,27 @@ import { IComment } from './Post'
 import { PostContent } from './PostContent'
 
 export interface ICommentProps extends IComment {
-  commentDeleteHandler: (commentId: string) => void
+  onCommentDelete: (commentId: string) => void
 }
 
 export function Comment (props: ICommentProps) {
   const [likes, setLikes] = useState(props.likes)
-
-  function handleLikeClick () {
-    setLikes(likes + 1)
-  }
 
   const {
     id,
     author,
     content,
     publishedAt,
-    commentDeleteHandler,
+    onCommentDelete,
   } = props
+
+  function handleLikeComment () {
+    setLikes((currentState) => currentState + 1)
+  }
+
+  function handleCommentDelete () {
+    onCommentDelete(id)
+  }
 
   const commentDate = format(publishedAt, "LLLL d 'at' HH:mm'h'")
   const commentDateToNow = formatDistanceToNow(publishedAt, {
@@ -57,7 +61,7 @@ export function Comment (props: ICommentProps) {
             </time>
           </div>
 
-          <button type="button" title="Delete comment" onClick={() => commentDeleteHandler(id)}>
+          <button type="button" title="Delete comment" onClick={handleCommentDelete}>
             <Trash size={20} />
           </button>
         </header>
@@ -70,7 +74,7 @@ export function Comment (props: ICommentProps) {
           type="button"
           className={`${styles.likeButton} ${likes > 0 ? styles.likeButtonPressed : ''}`}
           title="Like comment"
-          onClick={handleLikeClick}
+          onClick={handleLikeComment}
         >
           <ThumbsUp size={20} />
           Like <span>{likes}</span>

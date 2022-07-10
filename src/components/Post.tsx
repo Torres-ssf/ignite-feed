@@ -52,27 +52,27 @@ export function Post (props: IPostProps) {
   function handleCommentSubmit (event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    const trimmedText = trimText(commentText)
+    const content = formatInputedComment(trimText(commentText))
 
-    if (trimmedText) {
-      const content = formatInputedComment(trimmedText)
-
-      const comment: IComment = {
-        id: uuidv4(),
-        author,
-        content,
-        likes: 0,
-        publishedAt: new Date(),
-      }
-
-      setComments([...comments, comment])
-
-      setCommentText('')
+    const comment: IComment = {
+      id: uuidv4(),
+      author,
+      content,
+      likes: 0,
+      publishedAt: new Date(),
     }
+
+    setComments([...comments, comment])
+
+    setCommentText('')
+  }
+
+  function handleCommentChange (event: FormEvent<HTMLTextAreaElement>) {
+    setCommentText(event.currentTarget.value)
   }
 
   function handleCommentDelete (commentId: string) {
-    setComments(comments.filter(comment => comment.id !== commentId))
+    setComments(currentState => currentState.filter(comment => comment.id !== commentId))
   }
 
   const {
@@ -85,6 +85,8 @@ export function Post (props: IPostProps) {
   const postedDateToNow = formatDistanceToNow(postedAt, {
     addSuffix: true,
   })
+
+  const isCommentEmpty = trimText(commentText).length === 0
 
   return (
     <article className={styles.post}>
@@ -118,11 +120,10 @@ export function Post (props: IPostProps) {
         <textarea
           placeholder="Leave a comment"
           value={commentText}
-          onChange={e => setCommentText(e.target.value)}
+          onChange={handleCommentChange}
           required
         />
-
-        <button type="submit">Add comment</button>
+        <button type="submit" disabled={isCommentEmpty}>Add comment</button>
       </form>
 
       <div className={styles.commentList}>
@@ -130,7 +131,7 @@ export function Post (props: IPostProps) {
           <Comment
             {...comment}
             key={comment.id}
-            commentDeleteHandler={handleCommentDelete}
+            onCommentDelete={handleCommentDelete}
           />
         ))}
       </div>
