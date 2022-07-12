@@ -3,6 +3,7 @@ import {
   formatDistanceToNow,
 } from 'date-fns'
 import {
+  ChangeEvent,
   FormEvent,
   useState,
 } from 'react'
@@ -67,8 +68,8 @@ export function Post (props: IPostProps) {
     setCommentText('')
   }
 
-  function handleCommentChange (event: FormEvent<HTMLTextAreaElement>) {
-    setCommentText(event.currentTarget.value)
+  function handleCommentChange (event: ChangeEvent<HTMLTextAreaElement>) {
+    setCommentText(event.target.value)
   }
 
   function handleCommentDelete (commentId: string) {

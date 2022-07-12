@@ -1,6 +1,9 @@
-import { matchLinkOrHashtagRegex, splitLinkOrHashtagRegex, testLinkProtocolRegex } from '../utils/regex'
+import {
+  matchLinkOrHashtagRegex,
+  splitLinkOrHashtagRegex,
+  testLinkProtocolRegex,
+} from '../utils/regex'
 import { IPostContent } from './Post'
-
 import styles from './PostContent.module.css'
 
 export interface IPostContentProps {
